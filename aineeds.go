@@ -132,6 +132,12 @@ func (a *AI) Act() {
 	// Observe values changed during the being.act.
 	// TODO: Register the observation of values -> needs
 	// instead of hardcoding.
+	if a.Being.HP < a.Being.MaxHP {
+		a.Needs[NeedHealth] = true
+	}
+	if a.Being.HP < 3 {
+		a.Needs[NeedSurvival] = true
+	}
 	if a.Being.Hunger > HungerSatiationThreshold {
 		a.Needs[NeedSatiation] = true
 	}
@@ -181,10 +187,6 @@ func (a *AI) Heal() {
 // Damage is called when the AI is damaged by an attacker.
 func (a *AI) Damage(attacker *Being) {
 	a.Enemy = attacker
-	a.Needs[NeedRevenge] = true
-	a.Needs[NeedHealth] = true
-	if a.Being.HP < 3 {
-		a.Needs[NeedSurvival] = true
-	}
+	a.Needs[NeedRevenge] = true // TODO: Find a better way to set this.
 	a.Being.Damage(attacker)
 }
